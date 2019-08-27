@@ -9,6 +9,9 @@ namespace API.Models
         {
         }
 
-        public DbSet<Usuario> Usuarios { get; set; }
-    }
+        public DbSet<Cliente> Clientes { get; set; }
+		public DbSet<ContaBancaria> ContasBancarias { get; set; }
+		public DbSet<Endereco> Enderecos { get; set; }
+		public DbSet<Contato> Contatos { get; set; }
+	}
 }
