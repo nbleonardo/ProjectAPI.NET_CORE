@@ -11,8 +11,6 @@ namespace API.Models
 	public class ContaBancaria
 	{
 		public int Id { get; set; }
-		[ForeignKey("IdCliente")]
-		public Cliente Client { get; set; }
 		public int IdCliente { get; set; }
 		[Required(ErrorMessage = "Nome do banco deve ser informado")]
 		[DisplayName("Nome do Banco")]

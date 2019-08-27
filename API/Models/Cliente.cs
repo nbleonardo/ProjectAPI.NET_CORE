@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace API.Models
 {
@@ -29,19 +30,27 @@ namespace API.Models
 		[DisplayName("Profissão / Atividades Econômicas")]
 		public string ProfissaoAtividade { get; set; }
 
-		[DisplayName("Lista de contatos Telefônicos")]
-		public virtual List<Contato> Contatos { get; set; }
+        [DisplayName("Lista de contatos Telefônicos")]
+		public virtual ICollection<Contato> Contatos { get; set; }
 
-		[EmailAddress(ErrorMessage = "E-mail em formato inválido.")]
+        [EmailAddress(ErrorMessage = "E-mail em formato inválido.")]
 		[DisplayName("E-mail")]
 		public string Email { get; set; }
 
 		public virtual Endereco Endereco { get; set; }
 		public virtual ContaBancaria DadosBancarios { get; set; }
-
+        //TODO: Corrigir valor default
 		[DefaultValue(true)]
 		public bool Ativo { get; set; }
 
 		public DateTime DataDesativado { get; set; }
-	}
+
+
+        public Cliente()
+        {
+            Contatos = new HashSet<Contato>();
+            DadosBancarios = new ContaBancaria();
+            Endereco = new Endereco();
+        }
+    }
 }

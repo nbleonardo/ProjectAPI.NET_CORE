@@ -11,9 +11,6 @@ namespace API.Models
 	public class Endereco
 	{
 		public int Id { get; set; }
-
-		[ForeignKey("IdCliente")]
-		public Cliente Client { get; set; }
 		public int IdCliente { get; set; }
 		[Required]
 		[DisplayName("Logradouro")]
