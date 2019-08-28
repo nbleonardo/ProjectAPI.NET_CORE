@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models;
+using API.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,43 @@ namespace API.Controllers
                             Conta = "012365"
                         }
                     });
+                _context.Clientes.Add(
+                    new Cliente
+                    {
+                        Id = 2,
+                        Nome = "Usuário 2",
+                        CpfCnpj = "270.494.640-70",
+                        Data = new DateTime(2019, 2, 21),
+                        Sexo = "Masculino",
+                        ProfissaoAtividade = "Teste",
+                        Contatos = new List<Contato>{ new Contato {
+                            Id = 2,
+                            IdCliente = 2,
+                            Nome = "Contato 1",
+                            Telefone = "5199887766"
+                        } },
+                        Email = "teste@teste.com.br",
+                        Endereco = new Endereco
+                        {
+                            Id = 2,
+                            IdCliente = 2,
+                            Logradouro = "Rua Teste",
+                            Numero = "123",
+                            Bairro = "Teste B",
+                            CEP = "97414-100",
+                            Cidade = "Porto Alegre"
+                        },
+                        DadosBancarios = new ContaBancaria
+                        {
+                            Id = 2,
+                            IdCliente = 2,
+                            NomeBanco = "Teste Banco",
+                            Agencia = "0123",
+                            Conta = "012365"
+                        },
+                        Ativo = false,
+                        DataDesativado = new DateTime(2015, 2, 21)
+                    });
                 _context.SaveChanges();
             }
         }
@@ -64,13 +102,15 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
         {
-            return await (from client in _context.Clientes 
+            return await (from client in _context.Clientes
+                          where client.DataDesativado == null || Util.CalculaDiffAnos(client.DataDesativado.Value) <= 2
                          select new Cliente
                          {
                              Id = client.Id,
                              Nome = client.Nome,
                              CpfCnpj = client.CpfCnpj,
                              Data = client.Data,
+                             Sexo = client.Sexo,
                              ProfissaoAtividade = client.ProfissaoAtividade,
                              Contatos = _context.Contatos.Where(x=>x.IdCliente == client.Id).ToList(),
                              Email = client.Email,
@@ -84,27 +124,59 @@ namespace API.Controllers
 
         // GET: api/Cliente/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public async Task<ActionResult<Cliente>> Get(int id)
         {
-            return "value";
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            cliente.Contatos = _context.Contatos.Where(x => x.IdCliente == id).ToList();
+            cliente.Endereco = _context.Enderecos.Where(x => x.IdCliente == id).FirstOrDefault();
+            cliente.DadosBancarios = _context.ContasBancarias.Where(x => x.IdCliente == id).FirstOrDefault();
+            return cliente;
         }
 
         // POST: api/Cliente
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Cliente>> Post(Cliente item)
         {
+            _context.Clientes.Add(item);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
         }
 
         // PUT: api/Cliente/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(long id, Cliente item)
         {
+            if (id != item.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(item).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(long id)
         {
+            var todoItem = await _context.Clientes.FindAsync(id);
+
+            if (todoItem == null)
+            {
+                return NotFound();
+            }
+
+            _context.Clientes.Remove(todoItem);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 
 namespace API.Models
 {
-	public class Cliente
+    public class Cliente
 	{
 		public int Id { get; set; }
 
@@ -39,11 +38,11 @@ namespace API.Models
 
 		public virtual Endereco Endereco { get; set; }
 		public virtual ContaBancaria DadosBancarios { get; set; }
-        //TODO: Corrigir valor default
-		[DefaultValue(true)]
-		public bool Ativo { get; set; }
+        
+        [DefaultValue(true)]
+        public bool Ativo { get; set; } = true;
 
-		public DateTime DataDesativado { get; set; }
+		public DateTime? DataDesativado { get; set; }
 
 
         public Cliente()
