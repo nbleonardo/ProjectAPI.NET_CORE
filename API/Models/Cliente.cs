@@ -38,7 +38,7 @@ namespace API.Models
 
 		public virtual Endereco Endereco { get; set; }
 		public virtual ContaBancaria DadosBancarios { get; set; }
-        
+        //TODO: Ver alteração da data ao mudar o status
         [DefaultValue(true)]
         public bool Ativo { get; set; } = true;
 
