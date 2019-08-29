@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using API.Models;
+﻿using API.Models;
 using API.Service;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -139,19 +140,23 @@ namespace API.Controllers
 
         // POST: api/Cliente
         [HttpPost]
-        public async Task<ActionResult<Cliente>> Post(Cliente item)
+        public HttpResponseMessage Post(Cliente item)
         {
+            if (!ModelState.IsValid)
+            {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
             _context.Clientes.Add(item);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(Get), new { id = item.Id }, item);
+            return new HttpResponseMessage(HttpStatusCode.Created);
         }
 
         // PUT: api/Cliente/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(long id, Cliente item)
         {
-            if (id != item.Id)
+            if (id != item.Id || !ModelState.IsValid)
             {
                 return BadRequest();
             }

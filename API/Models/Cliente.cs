@@ -21,7 +21,7 @@ namespace API.Models
 		[Required(ErrorMessage = "Data deve ser preenchida")]
 		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
 		[DataType(DataType.Date, ErrorMessage = "Uma data válida deve ser informada!")]
-		public DateTime Data { get; set; }
+		public DateTime? Data { get; set; }
 
 		public string Sexo { get; set; }
 
