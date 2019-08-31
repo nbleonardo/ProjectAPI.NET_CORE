@@ -10,3 +10,6 @@
 ##Url para utilização da API:
 - List https://localhost:44328/api/Cliente
 
+###O Programa utilizado para consumir a API foi o Postman, lembre-se de desabilitar o uso do SSL para testar a API.
+###O formato de envio é o JSON.
+

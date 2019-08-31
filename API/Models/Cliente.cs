@@ -1,4 +1,5 @@
-﻿using System;
+﻿using API.Validations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -16,6 +17,7 @@ namespace API.Models
 
 		[Required(ErrorMessage = "CPF / CNPJ deve ser preenchido")]
 		[DisplayName("CPF / CNPJ")]
+		[CustomValidationCPFCNPJ(ErrorMessage = "CPF/CNPJ invalido")]
 		public string CpfCnpj { get; set; }
 
 		[Required(ErrorMessage = "Data deve ser preenchida")]

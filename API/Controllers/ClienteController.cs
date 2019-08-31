@@ -142,10 +142,6 @@ namespace API.Controllers
         [HttpPost]
         public HttpResponseMessage Post(Cliente item)
         {
-            if (!ModelState.IsValid)
-            {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest);
-            }
             _context.Clientes.Add(item);
             _context.SaveChangesAsync();
 
